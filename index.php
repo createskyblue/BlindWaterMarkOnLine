@@ -47,13 +47,20 @@ function RunCmd($cmd,$BoolBr){
 }
 /* 检查是否为锁定状态 */
 $_createpath = iconv('utf-8', 'gb2312', 'server.lock');
-if (file_exists($_createpath) == true||shell_exec("python cpu.py")>20) {
+//检查CPU使用率
+$CPU_USE=shell_exec("python cpu.py");
+if (file_exists($_createpath) == true||$CPU_USE>20) {
 ?>
 <body>
     <div class="md-content">
 		<h3>提示</h3>
 		<div>
-			<p>qwq! 服务器正在处理其他用户请求 建议3分钟后刷新页面</p>
+			<p>qwq! 服务器正在响应其他大大\太太的请求 建议3分钟后刷新页面</p>
+			<p>*抱歉 咱这项目破产边缘，服务器性能不太好只能同时处理一位大佬的请求 请原谅咱</p>
+			<?php
+			    echo ">CPU使用率: " . $CPU_USE;
+			?>
+			
 		</div>
 	</div>
 </body>
@@ -70,7 +77,7 @@ if (isset($_FILES['SourcePhoto']) && isset($_FILES['watermark']) && is_uploaded_
             $imgType_SourcePhoto = $imgFile_SourcePhoto['type']; //文件类型。
             $imgType_watermark = $imgFile_watermark['type'];
             /* 判断文件类型*/
-            if ($imgType_watermark == 'image/png'&& $imgType_SourcePhoto == 'image/png'||$imgType_watermark == 'image/jepg'&& $imgType_SourcePhoto == 'image/jepg'||$imgType_watermark == 'image/jpg'&& $imgType_SourcePhoto == 'image/jpg'||1)
+            if ($imgType_watermark == 'image/png'&& $imgType_SourcePhoto == 'image/png')
             {    
                 $imgFileName_SourcePhoto = random(16);
                 $imgSize_SourcePhoto = $imgFile_SourcePhoto['size'];
@@ -110,16 +117,19 @@ if (isset($_FILES['SourcePhoto']) && isset($_FILES['watermark']) && is_uploaded_
                                 echo '<br>> 操作成功完成';
                                 $down_host = $_SERVER['HTTP_HOST'].'/'; //当前域名
                                 echo '<br> 下载链接： '.'http://'.$down_host.'tmp/'.$ImgOutputName;
-								echo '<br>';
-								echo $imgFileName_out;
                             }else{
                                 echo '<br>> 操作失败';
                                 echo '<br>> 清理缓存区图片';
                                 RunCmd(sprintf("rm /tmp/%s",$imgFileName_SourcePhoto),0);
                                 RunCmd(sprintf("rm /tmp/%s",$imgFileName_watermark),0);
+                                echo '<br>*提示 ：<br>  假若报错带有killed字样表示服务器内存溢出，咱这服务器是树莓派3b不足以处理分辨率大于720p的图片 请咱裁剪原图重试OwO';
                             }
 		    		    ?>
+			    		
 			    		<ul>
+			    			<?php
+			    			echo $imgFileName_out;
+			    			?>
 			    		</ul>
 			    	</div>
 			        </div>
@@ -127,17 +137,7 @@ if (isset($_FILES['SourcePhoto']) && isset($_FILES['watermark']) && is_uploaded_
                 </head>
                 <?php
             }else{
-		?>
-		<div class="md-content">
-				<h3>提示</h3>
-				<div>
-					<p>类型错误</p>
-					<ul>
-						<li>只接受png或jpeg类型的图片</li>
-					</ul>
-				</div>
-			</div>
-		<?php
+                    echo "请选择jpg或png文件，不支持其它类型的文件。";
             }
             }else{    
                 echo "文件上传失败。<br>";
@@ -195,7 +195,7 @@ input.labelauty + label { font: 12px "Microsoft Yahei";}
 			<div class="md-content">
 				<h3>提示</h3>
 				<div>
-					<p>分辨率请小于1080P 否则可能溢出</p>
+					<p>是树莓派3B 内存不足 分辨率请小于720P 否则溢出</p>
 					<ul>
 						<li><strong>提示：</strong>上传后大概会卡顿几分钟没有反应 这是正常现象，请不要刷新画面，否则无输出</li>
 						<li><strong>制作：</strong>上传原图片和你所希望的水印图片 水印图片要小于原图片 确保格式为png 否则无输出</li>
@@ -211,6 +211,8 @@ input.labelauty + label { font: 12px "Microsoft Yahei";}
 				<div>
 					<p>正在执行操作</p>
 					<ul>
+					    <li>咱使用sunny-ngrok免费转发服务</li>
+					    <li>上传图片中...还请汝耐心等待</li>
 						<li>请勿关闭或刷新页面 大约需要1分钟</li>
 					</ul>
 					<button class="md-close">确认</button>
@@ -236,13 +238,13 @@ input.labelauty + label { font: 12px "Microsoft Yahei";}
   <br/><br/>
           <div class="wrap">
              <span>原图片</span>
-             <input class="file" name="SourcePhoto" type="file" accept=""/>
+             <input class="file" name="SourcePhoto" type="file" accept="image/png"/>
           </div>&nbsp;&nbsp;&nbsp;&nbsp;
           
              
          <div class="wrap">
              <span>水印图</span>
-             <input class="file" name="watermark" type="file" accept=""/>
+             <input class="file" name="watermark" type="file" accept="image/png"/>
          </div>
      <br/><br/>
     <button name="Upload" class="button button-glow button-rounded button-caution md-trigger"  data-modal="modal-2">大快人心</button>

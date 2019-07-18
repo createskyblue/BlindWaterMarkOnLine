@@ -2,8 +2,7 @@
 调用以下项目：https://github.com/chishaxie/BlindWaterMark
 
 ### 在线体验
-http://bwm.free.idcfengye.com/index.php 
-该项目使用华为提供的稳定15天免费服务器 将于2019/05/17 23:59:59 GMT+08:00过期
+http://bwm.free.idcfengye.com/BWM/
 
 ### 安装步骤
 1. 安装python2.7
@@ -52,3 +51,9 @@ http://bwm.free.idcfengye.com/index.php
 ##### 水印图必须小于原图，格式最好为png
 ![image](https://github.com/createskyblue/BlindWaterMarkOnLine/raw/master/img/4.png)
 ##### 提取出来的水印图
+
+###更新记录
+
+####2019/7/18
+1.过载CPU使用率提示
+2.修改一些文本内容
